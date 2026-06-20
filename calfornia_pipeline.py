@@ -6,6 +6,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import root_mean_squared_error
 import kagglehub
 import os
 
@@ -53,5 +57,29 @@ full_pipeline = ColumnTransformer([
 ])
 
 # Transform the Data
-housing_prepared = full_pipeline.fit(housing)
-print(housing_prepared.sample(10))
+housing_prepared = full_pipeline.fit_transform(housing)
+print(housing_prepared.shape)
+
+# Linear Regression
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared,housing_label)
+
+# Decison Tree 
+tree_reg = DecisionTreeClassifier()
+tree_reg.fit(housing_prepared,housing_label)
+
+# Random Forest
+forest_reg = RandomForestClassifier()
+forest_reg.fit(housing_prepared,housing_label)
+
+
+# RMSE Accuracy
+lin_rmse = root_mean_squared_error(housing_label,lin_reg,squared = False)
+tree_rmse = root_mean_squared_error(housing_label,tree_reg,squared = False)
+forest_rmse = root_mean_squared_error(housing_label,forest_reg,squared = False)
+
+
+print(f"RMSE Linear Regression: {lin_rmse}")
+print(f"RMSE Decision Tree Regression: {tree_rmse}")
+print(f"RMSE Random Forest Regression: {forest_rmse}")
+
